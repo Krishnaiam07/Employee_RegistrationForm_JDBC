@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>DATA NOT FOUND ERROR</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	crossorigin="anonymous">
+
+
+</head>
+<body>
+<div class="container my-2" >
+<h2 class="corner-heading"> <a th:href = "@{/backToHome}" class="btn btn-primary btn-sm mb-3">Back to Home </a>
+
+
+<div th:if="${#lists.isEmpty(listEmployees)}">
+<h2 style="color: red; align-content: center;">DATA NOT FOUND</h2>  
+</div>
+
+<table border="1" class="table table-striped table-responsive-md">  
+<thead>
+<tr>
+
+<th> Employee Id</th> 
+<th> Employee Name</th>
+<th>Employee Salary</th> 
+</tr>
+</thead>
+
+<tbody>
+<tr th:each="employee: ${listEmployees}">
+<td th:text="${employee.id}"></td>
+<td th:text="${employee.employeeName}"></td>
+<td th:text="${employee.salary}"><td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+</body>
+</html>

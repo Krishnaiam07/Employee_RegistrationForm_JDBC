@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"> 
+<head>
+<meta charset="ISO-8859-1">
+<title>EMPLOYEE ID's</title>
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<style type="text/css"> 
+
+     h1 {
+            font-size: medium;
+            font-weight: bold;
+        }
+
+  .button-spacing {
+    margin-right: 300px; /* Adjust the value as needed */
+ } .dropdown-container {
+      text-align: center;
+    }.statement {
+  margin-bottom: 20px; /* Adds 20 pixels of margin below each paragraph */
+}
+</style>
+</head>
+
+
+<body> 
+<div class="container" style="border:2px solid black">
+
+<br>
+<br>
+    <h2  style="text-align:center"><b>DELETE REGISTERED EMPLOYEES</b></h2>
+   <a th:href = "@{/backToHome}" class="btn btn-primary btn-sm mb-3">Back to Home </a>  
+  
+
+
+
+ 			<div class="statement"  style="text-align:center">
+                 <label for="employeeID"    >Employee ID</label> 
+
+
+                  <select id="id" name="selectedId"  >
+        				<option th:value="0">Select ID</option>
+       					 <option th:each="emp : ${deleteEmployee}" th:value="${emp.id}"  th:text="${emp.id}" >
+      					</option>      
+                     </select>
+                  
+                  
+                    
+                  <button   class="statement"  style="text-align:center"onClick=validateForm() >Submit</button><br></br>
+                
+                </div>
+                     
+                                   
+         <div id="employeeDiv" style="display: none;">
+                     
+<!-- <form action="#" id="formcheck"> -->
+
+			 <input type="hidden"  id="getId" name="id"  >
+           
+              <label for="employeeName"><b>Employee Name:</b></label>    
+              <input type="text"  id="employeeNameInput" name="employeeName"  readonly="readonly"><br>
+
+              <label for="Salary"><b>Employee Salary:</b></label> 
+              <input type="text" id="salaryInput" name="salary" readonly="readonly">
+              
+              <button  class="button-spacing btn btn-info col-2" onClick=deleteEmployee() style="text-align:center" value="Submit"> Delete Employee</button>
+              
+<!--               </form> -->
+              
+           </div>
+           
+           
+      </div>                
+    </body>                  
+               
+                     
+                     
+   
+<script type="text/javascript">
+function validateForm() {
+    var selectedId = document.getElementById("id").value;
+    if (selectedId === "0") { 
+        alert("Please select at least one Employee ID.");  
+        return false;
+    }
+    else {
+    	$("#employeeDiv").show();
+    	$("#getId").val(selectedId);
+    }
+    
+    // Calling Ajax Methedology for Auto Populating Employee Data into Delete Form.
+    $.ajax({
+      url: "/getEmployeeDataUsingAjax",
+      type: "GET", 
+      data : {
+    	  "empId" : selectedId 
+      },
+      success: function(response) {
+    	  
+    	  var result = JSON.parse(response);
+    	  
+    	  $("#employeeNameInput").val(result.employeeName);
+    	  $("#salaryInput").val(result.salary);
+    	
+      }
+    })
+}
+
+
+function deleteEmployee() {
+    var selectedId = document.getElementById("id").value;
+    
+    // Calling Ajax Methedology for Deleting Employee.
+    $.ajax({
+      url: "/deleteEmployeeById",
+      type: "POST", 
+      data : {
+    	  "empId" : selectedId 
+      },
+      success: function(response) {
+    	  
+    	 if(response == '1')
+    	 {
+    		  alert("Employee Deleted Successfully");
+    		  window.location.href = '/listOfRegisteredEmployees';
+    	 }
+    	  
+    	
+      }
+    })
+    
+    
+}
+
+
+</script>
+</html>
+

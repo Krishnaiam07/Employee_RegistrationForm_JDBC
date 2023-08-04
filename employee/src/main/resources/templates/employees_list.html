@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Employee Registration Form</title>
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	crossorigin="anonymous">
+
+<style>
+     h1 {
+            font-size: medium;
+            font-weight: bold;
+        }
+</style>
+
+</head>
+<body>
+
+<div class="container" style="border:2px solid black">
+<h1 style="text-align:center">LIST OF REGISTERED EMPLOYEES</h1> 
+<br>
+ <a th:href = "@{/backToHome}" class="btn btn-primary btn-sm mb-3">Back to Home </a>  
+ <a th:href = "@{/addEmployee}" class="btn btn-primary btn-sm mb-3">Add Employee </a>
+ <a th:href = "@{/updateEmployee}" class="btn btn-primary btn-sm mb-3">Update Employee </a>
+ <a th:href = "@{/deleteEmployee}" class="btn btn-primary btn-sm mb-3">Delete Employee </a>
+
+
+
+<div th:if="${#lists.isEmpty(listEmployees)}"> 
+<h2 style="color: red; align-content: center;">DATA NOT FOUND</h2>  
+</div>
+
+<table border="1" class="table table-striped table-responsive-md">  
+<thead>
+<tr>
+
+ <br></br><th> Employee Id</th> 
+<th> Employee Name</th>
+<th>Employee Salary</th>  
+</tr>
+</thead>
+
+<tbody>
+<tr th:each="employee: ${listEmployees}">   
+<td th:text="${employee.id}"></td> 
+<td th:text="${employee.employeeName}"></td>   
+<td th:text="${employee.salary}"></tr></tbody>
+</table>
+
+</div>
+
+
+</body>
+</html>

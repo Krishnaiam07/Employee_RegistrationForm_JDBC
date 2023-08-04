@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"> 
+<head>
+<meta charset="ISO-8859-1">
+<title>Register Employee Here</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<style type="text/css"> 
+
+     h1 {
+            font-size: medium;
+            font-weight: bold;
+        }
+
+  .button-spacing {
+    margin-right: 300px; /* Adjust the value as needed */
+ } .dropdown-container {
+      text-align: center;
+    }.statement {
+  margin-bottom: 20px; /* Adds 20 pixels of margin below each paragraph */
+}
+</style>
+</head>
+<body>
+<div class="container" style="border:2px solid black">
+
+<br>
+<br>
+    <h2  style="text-align:center"><b>UPDATE REGISTERED EMPLOYEES</b></h2> 
+   <a th:href = "@{/backToHome}" class="btn btn-primary btn-sm mb-3">Back to Home </a>  
+  
+
+
+
+ 				<div class="statement"  style="text-align:center">
+                 <label for="employeeID"    >Employee ID</label> 
+
+                <select id="id" name="selectedId"  style="margin-bottom: 10px;">
+    
+        				<option th:value="0">Select ID</option>
+       					 <option th:each="emp : ${listOfEmployees}" th:value="${emp.id}"  th:text="${emp.id}" >
+      					</option>      
+                     </select>
+                     
+                   
+                     
+                     
+  
+                      <button    onClick=validateForm()  >Submit</button><br></br>
+                   
+                     </div> 
+         <div id="employeeDiv" style="display: none;">
+                     
+<form action="#" id="formcheck" th:action="@{/update}" th:object="${employee}" method="POST">
+
+			 <input type="hidden"  id="getId" name="id"  >
+           
+    
+  
+
+ <label for="employeeName"><b>Employee Name:</b></label>    
+<input type="text"  id="employeeNameInput" name="employeeName"  maxlength="50">
+<span id="employeeNameError" style="color: red; display: none;"><b>Please enter a valid employeeName.</b></span> 
+
+<label for="Salary"><b>Employee Salary:</b></label> 
+<input type="text" id="salaryInput" name="salary"  >
+<span id="salaryError" style="color: red; display: none;"><b>Please enter a valid salary.</b></span>   
+
+
+
+
+
+
+<button type="submit"  class="button-spacing btn btn-info col-2"  style="text-align:center" value="Submit"  >Update Employee</button> 
+
+              
+              </form>
+              
+           </div>
+           
+       </div>    
+                      
+    </body>                  
+                      
+                      
+<!--                      </form> -->
+                     
+
+<script th:inline="javascript">
+
+function validateForm() {
+	
+	
+	var selectedId = document.getElementById("id").value;
+    if (selectedId === "0") { 
+        alert("Please select at least one Employee ID."); 
+        return false;
+    }
+    else {
+    	$("#employeeDiv").show();
+    	$("#getId").val(selectedId);
+    }
+    
+    // Calling Ajax Methedology for Auto Populating Employee Data into Update Form.
+    $.ajax({
+      url: "/getEmployeeDataUsingAjax",
+      type: "GET",
+      data : {
+    	  "empId" : selectedId
+      },
+      success: function(response) {
+    	  
+    	  var result = JSON.parse(response);
+    	 
+    	  
+    	  
+    	  $("#employeeNameInput").val(result.employeeName); 
+    	  $("#salaryInput").val(result.salary);
+    	
+      }
+    })
+}
+
+
+//This is for EmployeeName
+document.getElementById("employeeNameInput").addEventListener("input", function() {   
+var employeeNameInput = document.getElementById("employeeNameInput");
+var employeeNameError = document.getElementById("employeeNameError");    
+
+var salaryInput = document.getElementById("salaryInput");
+
+
+var employeeName = $('#employeeNameInput').val();
+
+
+if (employeeName.length > 50) {
+	
+event.preventDefault(); // Prevent form submission
+$(this).val(employeeName.substr(0, 50));
+alert("Employee Name should not be more than 50 characters");
+
+employeeName.focus();
+}
+
+var nameRegex = /^[a-zA-Z\s]+$/;
+
+
+if (!nameRegex.test(employeeNameInput.value)) { 
+	
+	alert("Invalid employee name."); 
+	  $("#employeeNameInput").focus();
+$(document).ready(function() {
+	
+	  $('#employeeNameInput').keydown(function(event) { 
+		  
+	    if (event.keyCode === 9) { // Check if the key pressed is the tab key (key code 9)
+	      event.preventDefault(); // Prevent the default tab behavior
+	    }
+	  });
+	});
+
+
+
+
+$('#salaryInput').mousedown(function(e){ 
+	  e.preventDefault();
+	  $(this).blur();
+	});
+
+
+	
+employeeNameError.style.display = "inline";
+
+} else {
+
+	employeeNameError.style.display = "none";
+
+
+var salaryInput = document.getElementById("salaryInput");
+$('#salaryInput').mousedown(function(e){
+	  e.preventDefault();
+	  salaryInput.focus();; 
+	}); 
+
+
+
+
+} 
+});
+
+
+//This For Salary
+
+document.getElementById("salaryInput").addEventListener("input", function() {   
+	 
+	var salaryInput = document.getElementById("salaryInput"); 
+	var salaryError = document.getElementById("salaryError"); 
+	
+	
+	var salary = $('#salaryInput').val();
+	if (salary.length > 7) {
+		 $(this).val(salary.substr(0, 7));
+	  event.preventDefault(); // Prevent form submission
+	  alert(' Employee salary  not more than 7 digits.');
+	  salary.focus();
+	}
+
+	
+	var salaryRegax = /^\d{3,7}$/;
+
+  if (!salaryRegax.test(salaryInput.value)) {
+  	
+  	alert("Invalid salaryInput.");
+  	  $("#salaryInput").focus();
+  	  
+  	  $(document).ready(function() {
+  	  	  $('#salaryInput').keydown(function(event) {
+  	  	    if (event.keyCode === 9) {
+  	  	      event.preventDefault();
+  	  	    }
+    	  });
+    	});
+
+  	  
+  	  
+  	  $('#employeeNameInput').mousedown(function(e){ 
+  	  	  e.preventDefault();
+  	  	  $(this).blur();
+  	  	});
+  	  
+  	 
+  		
+  	  salaryError.style.display = "inline";
+
+  	} else {
+
+  		salaryError.style.display = "none";
+  		var employeeNameInput = document.getElementById("employeeNameInput");
+  		$('#employeeNameInput').mousedown(function(e){
+  			  e.preventDefault();
+  			  employeeNameInput.focus();;   
+  	
+  			}); 
+
+
+
+
+  	} 
+  	});
+
+
+$('#formcheck').submit(function() {
+	
+	//JavaScript Client Side Validation
+	var employeeName = $("#employeeNameInput").val().trim();
+
+	var salary = $("#salaryInput").val();
+	
+	alert(employeeName.length);
+	
+
+	if(employeeName == "")
+	{
+		$("#employeeNameInput").focus();
+		alert("Enter employeeName ");
+		return false;		
+	}
+	
+	
+	 var nameRegex = /^[a-zA-Z\s]+$/;
+
+	  if (!nameRegex.test(employeeName)) {
+		  alert("Invalid Employee Name.");
+		  $("#employeeNameInput").focus();
+		  return false;
+	  }
+	  if(employeeName.length>50){
+		  $("#employeeNameInput").focus();
+			alert("Employee Name should not more than 50 characters");
+			return false;		
+	  }
+	 
+	
+	if(salary == "")
+	{
+		$("#salaryInput").focus(); 
+		alert("Enter Salary");
+		return false;		
+	}
+	var salaryRegax = /^\d{3,7}$/;
+
+
+	  if (!salaryRegax.test(salary)) {
+		  alert("Please Enter salary between 3 to 7 digits."); 
+		  $("#salaryInput").focus();  
+		  return false;  
+	  }
+	  if(salary.length>7){
+		  $("#salaryInput").focus(); 
+			alert("Salary value should not be greater than 7 digits");
+			return false;		
+		 
+	  }
+});
+
+
+
+</script>
+</html>
